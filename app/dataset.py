@@ -1,38 +1,71 @@
 import csv
 import random
 
-class Dataset_Loader:
-    path : str
-    data = []
-    labels = []
-    test_data = []
-    test_labels = []
-    train_data = []
-    train_labels =[]
-    caption = []
 
+"""
+    This class is used to load the dataset and to split it into training and test sets.
+    Class variables:
+        path : str
+        data : list
+        labels : list
+        test_data : list
+        test_labels : list
+        train_data : list
+        train_labels : list
+        caption : list
+"""
+class Dataset_Loader:
+
+    path : str
+    data : list
+    labels : list
+    test_data : list
+    test_labels : list
+    train_data : list
+    train_labels : list
+    caption : list
+
+
+    """
+        This function initialize our class
+    """
     def __init__(self, path,ratio=0.75):
         self.path = path
         self._load_data()
         self._init_train_test_dataset(ratio)
 
-    def _load_data(self):
-        with open(self.path, 'r') as file:
-            reader = csv.reader(file)
-            i=0
-            for row in reader:
-                if i==0 : 
-                    i=i+1
-                    self.caption = row
-                else: 
-                    tmp = row[:-2]
-                    data_line={}
-                    for j in range(len(tmp)):
-                        data_line[self.caption[j]] = float(tmp[j])
 
-                    self.data.append(data_line)
-                    self.labels.append(float(row[-2]))
+    """
+        Load the data from the csv file self.path : parameters are stored in self.data and results (quality column) in self.labels
+        Id column is not stored
+        The data in the file have to be write like this :
+        fixed acidity,volatile acidity,citric acid,residual sugar,chlorides,free sulfur dioxide,total sulfur dioxide,density,pH,sulphates,alcohol,quality,Id
+    """
+    def _load_data(self):
+        try : 
+            with open(self.path, 'r') as file:
+                reader = csv.reader(file)
+                i=0
+                for row in reader:
+                    if i==0 : 
+                        i=i+1
+                        self.caption = row
+                    else: 
+                        tmp = row[:-2]
+                        data_line={}
+                        for j in range(len(tmp)):
+                            data_line[self.caption[j]] = float(tmp[j])
+
+                        self.data.append(data_line)
+                        self.labels.append(float(row[-2]))
+        except FileNotFoundError:
+            print("File not found")
                     
+    
+    """
+        Split the dataset into training and test sets
+        ratio : percentage of the dataset used for training. By default, 75% of the dataset is used for training
+    """
     def _init_train_test_dataset(self, ratio):
         data_tmp = self.data
         labels_tmp = self.labels
@@ -46,6 +79,9 @@ class Dataset_Loader:
         self.test_labels=labels_tmp
 
 
+    """
+        Print size of dataset
+    """
     def _info(self):
         print("Datasets Information :")
         print("Dataset train : ")
@@ -56,15 +92,29 @@ class Dataset_Loader:
         print("Taille : ",len(self.data))
 
 
+#----------------GETTERS----------------
+
+    """
+        Return the train dataset
+    """
     def _get_train_data(self):
         return(self.train_data,self.train_labels)
 
+    """
+        Return the test dataset
+    """
     def _get_test_data(self):
         return(self.test_data,self.test_labels)
 
+    """
+        Return the data dataset
+    """
     def _get_data(self):
         return(self.data,self.labels)
 
+    """
+        Return the caption in the file
+    """
     def _get_caption(self):
         return self.caption
         

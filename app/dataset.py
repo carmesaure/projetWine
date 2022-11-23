@@ -12,7 +12,6 @@ import random
         test_labels : list
         train_data : list
         train_labels : list
-        caption : list
 """
 class Dataset_Loader:
 
@@ -23,7 +22,6 @@ class Dataset_Loader:
     test_labels : list
     train_data : list
     train_labels : list
-    caption : list
 
 
     """
@@ -31,6 +29,12 @@ class Dataset_Loader:
     """
     def __init__(self, path,ratio=0.75):
         self.path = path
+        self.data = []
+        self.labels = []
+        self.test_data = []
+        self.test_labels = []
+        self.train_data = []
+        self.train_labels = []
         self._load_data()
         self._init_train_test_dataset(ratio)
 
@@ -49,12 +53,12 @@ class Dataset_Loader:
                 for row in reader:
                     if i==0 : 
                         i=i+1
-                        self.caption = row
+                        caption = row
                     else: 
                         tmp = row[:-2]
                         data_line={}
                         for j in range(len(tmp)):
-                            data_line[self.caption[j]] = float(tmp[j])
+                            data_line[caption[j]] = float(tmp[j])
 
                         self.data.append(data_line)
                         self.labels.append(float(row[-2]))
@@ -67,10 +71,11 @@ class Dataset_Loader:
         ratio : percentage of the dataset used for training. By default, 75% of the dataset is used for training
     """
     def _init_train_test_dataset(self, ratio):
-        data_tmp = self.data
-        labels_tmp = self.labels
+        data_tmp = self.data.copy()
+        labels_tmp = self.labels.copy()
+        
         i=0
-        while i<ratio*len(data_tmp):
+        while (i<ratio*len(data_tmp)):
             random_int=random.randrange(len(data_tmp))
             self.train_data.append(data_tmp.pop(random_int))
             self.train_labels.append(labels_tmp.pop(random_int))
@@ -112,18 +117,6 @@ class Dataset_Loader:
     def _get_data(self):
         return(self.data,self.labels)
 
-    """
-        Return the caption in the file
-    """
-    def _get_caption(self):
-        return self.caption
-        
-    
 
     
-    
 
-#if __name__ == '__main__':
-#    loader = Dataset_Loader('data/Wines.csv')
-#    loader._info()
-    

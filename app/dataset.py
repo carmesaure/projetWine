@@ -22,6 +22,8 @@ class Dataset_Loader:
     test_labels : list
     train_data : list
     train_labels : list
+    val_data : list
+    val_labels : list
 
 
     """
@@ -35,8 +37,11 @@ class Dataset_Loader:
         self.test_labels = []
         self.train_data = []
         self.train_labels = []
+        self.val_data = []
+        self.val_labels = []
         self._load_data()
         self._init_train_test_dataset(ratio)
+        self._init_val_dataset(0.05)
 
 
     """
@@ -56,11 +61,10 @@ class Dataset_Loader:
                         caption = row
                     else: 
                         tmp = row[:-2]
-                        data_line={}
                         for j in range(len(tmp)):
-                            data_line[caption[j]] = float(tmp[j])
+                            tmp[j] = float(tmp[j])
 
-                        self.data.append(data_line)
+                        self.data.append(tmp)
                         self.labels.append(float(row[-2]))
         except FileNotFoundError:
             print("File not found")
@@ -75,13 +79,30 @@ class Dataset_Loader:
         labels_tmp = self.labels.copy()
         
         i=0
-        while (i<ratio*len(data_tmp)):
+        while (i<ratio*len(self.data)):
             random_int=random.randrange(len(data_tmp))
             self.train_data.append(data_tmp.pop(random_int))
             self.train_labels.append(labels_tmp.pop(random_int))
             i=i+1
         self.test_data=data_tmp
         self.test_labels=labels_tmp
+
+    """
+        Split the dataset train into training and validation sets
+        ratio : percentage of the dataset used for validation. By default, 5% of the dataset is used for validation
+    """
+    def _init_val_dataset(self, ratio):
+        data_tmp = self.train_data.copy()
+        labels_tmp = self.train_labels.copy()
+        
+        i=0
+        while (i<ratio*len(self.train_data)):
+            random_int=random.randrange(len(data_tmp))
+            self.val_data.append(data_tmp.pop(random_int))
+            self.val_labels.append(labels_tmp.pop(random_int))
+            i=i+1
+        self.train_data=data_tmp
+        self.train_labels=labels_tmp
 
 
     """
@@ -91,6 +112,8 @@ class Dataset_Loader:
         print("Datasets Information :")
         print("Dataset train : ")
         print("Taille : ",len(self.train_data))
+        print("Dataset validation : ")
+        print("Taille : ",len(self.val_data))
         print("\nDataset test : ")
         print("Taille : ",len(self.test_data))
         print("\nDataset total : ")
@@ -104,6 +127,12 @@ class Dataset_Loader:
     """
     def _get_train_data(self):
         return(self.train_data,self.train_labels)
+
+    """
+        Return the validation dataset
+    """
+    def _get_val_data(self):
+        return(self.val_data,self.val_labels)
 
     """
         Return the test dataset

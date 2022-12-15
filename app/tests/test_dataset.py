@@ -10,10 +10,13 @@ class Test_dataset(unittest.TestCase):
         self.loader = Dataset_Loader('data/Wines.csv')
 
     def test_get_train_data(self):
-        self.assertEqual(len(self.loader._get_train_data()[0]), 490)
+        self.assertEqual(len(self.loader._get_train_data()[0]), 815)
+
+    def test_get_val_data(self):
+        self.assertEqual(len(self.loader._get_val_data()[0]), 43)
 
     def test_get_test_data(self):
-        self.assertEqual(len(self.loader._get_test_data()[0]), 653)
+        self.assertEqual(len(self.loader._get_test_data()[0]), 285)
 
     def test_get_data(self):
         self.assertEqual(len(self.loader._get_data()[0]), 1143)
@@ -24,6 +27,7 @@ if __name__ == '__main__':
     test=Test_dataset()
     test.setUp()
     test.test_get_train_data()
+    test.test_get_val_data()
     test.test_get_test_data()
     test.test_get_data()
     print("all tests passed")

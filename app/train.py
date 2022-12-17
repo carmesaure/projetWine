@@ -1,6 +1,4 @@
-import keras
 import sys
-import unittest
 
 sys.path.append("./")
 
@@ -60,12 +58,25 @@ class TrainClass:
         else :
             pickle.dump(self.model, open(filename, 'wb'))
         
+    """
+        Fonction qui retourne la description du modèle
+    """
+    def _description(self):
+        res=''
+        if self.model_type=='base':
+            res=self.model.summary()
+        elif self.model_type=='regression':
+            res='Regression Linéaire classique avec aucun paramètre.'
+        else:
+            res="Model not found"
+        return res
 
 #Test du code
 if __name__ == '__main__':
     t=TrainClass('base')
     t._train()
     t._save()
+    t._description()
 
     loader = Dataset_Loader('data/Wines.csv')
     X_test, Y_test = loader._get_test_data()

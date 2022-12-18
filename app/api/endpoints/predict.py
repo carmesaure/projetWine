@@ -10,7 +10,7 @@ router = APIRouter()
 
 @router.get("/")
 async def vin_parfait():
-    return {"message" : "le vin parfait"}
+    return {"perfect_wine" : {'fixed acidity' : 10.5,'volatile acidity': 0.3,'cytric acid':0.5,'residual sugar':2.78,'chlorides':0.071,'free sulfur dioxide':9.0,'total sulfur dioxide':16.0,'density':0.994,'pH':3.15,'sulphates':0.75,'alcohol':14}}
     
     
 @router.post("/")

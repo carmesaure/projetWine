@@ -1,2 +1,4 @@
 fastapi[all]
 pytest
+tensorflow
+scikit-learn

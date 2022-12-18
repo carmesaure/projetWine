@@ -48,8 +48,10 @@ class TrainClass:
         val_data, val_label=loader._get_val_data()
         if self.model_type == 'base':
             self.model.fit(train_data,train_label,batch_size=self.batch_size,epochs=self.epochs,verbose=1,validation_data=(val_data,val_label))
-        else :
+        elif self.model_type=='regression':
             self.model.fit(train_data,train_label)
+        else :
+            raise ValueError
     """
         Save the model
     """
@@ -61,15 +63,34 @@ class TrainClass:
             pickle.dump(self.model, open(filename, 'wb'))
         
 
+    """
+        Fonction qui retourne la description du modèle
+    """
+    def _description(self):
+        res=''
+        if self.model_type=='base':
+            res=self.model.summary()
+        elif self.model_type=='regression':
+            res=self.model.coef_
+        else:
+            res="Model not found"
+        return res
+
 #Test du code
 if __name__ == '__main__':
-    t=TrainClass('base')
+    t=TrainClass('regression')
     t._train()
     t._save()
+    print(t._description())
 
-    loader = Dataset_Loader('data/Wines.csv')
-    X_test, Y_test = loader._get_test_data()
-    predictions=t.model.predict(X_test)
-    for i in range(0,len(predictions)):
-        print("predict : ",predictions[i], "resultat attendu : ", Y_test[i])
+    bestwine=[10.5,0.3,0.5,2.78,0.071,9.0,16.0,0.994,3.15,0.75,14]
+
+
+#    loader = Dataset_Loader('data/Wines.csv')
+
+#    X_test, Y_test = loader._get_test_data()   
+
+#    predictions=t.model.predict(X_test)
+#    for i in range(0,len(predictions)):
+#        print("predict : ",predictions[i], "resultat attendu : ", Y_test[i])
 

@@ -1,6 +1,6 @@
 import csv
 import random
-
+from sklearn import preprocessing
 
 """
     This class is used to load the dataset and to split it into training and test sets.
@@ -12,6 +12,7 @@ import random
         test_labels : list
         train_data : list
         train_labels : list
+        scaler : object
 """
 class Dataset_Loader:
 
@@ -24,6 +25,7 @@ class Dataset_Loader:
     train_labels : list
     val_data : list
     val_labels : list
+    scaler : object
 
 
     """
@@ -39,10 +41,12 @@ class Dataset_Loader:
         self.train_labels = []
         self.val_data = []
         self.val_labels = []
+        self.scaler=None
         self._load_data()
+        self._normalize()
         self._init_train_test_dataset(ratio)
         self._init_val_dataset(0.05)
-
+        
 
     """
         Load the data from the csv file self.path : parameters are stored in self.data and results (quality column) in self.labels
@@ -106,6 +110,14 @@ class Dataset_Loader:
 
 
     """
+        Normalize data between -1 and 1
+    """
+    def _normalize(self):
+        self.scaler = preprocessing.StandardScaler().fit(self.data)
+        self.data = (self.scaler.transform(self.data)).tolist()
+
+
+    """
         Print size of dataset
     """
     def _info(self):
@@ -145,6 +157,12 @@ class Dataset_Loader:
     """
     def _get_data(self):
         return(self.data,self.labels)
+
+    """
+        Return the scaler
+    """
+    def _get_scaler(self):
+        return(self.scaler)
 
 
     

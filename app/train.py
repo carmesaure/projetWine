@@ -4,8 +4,8 @@ import unittest
 
 sys.path.append("./")
 
-from dataset import Dataset_Loader
-import model_.models as models
+from app.dataset import Dataset_Loader
+import app.model_.models as models
 import pickle
 
 
@@ -33,9 +33,9 @@ class TrainClass:
         self.batch_size=batch_size
         self.epochs=epochs
         if model_type == "regression":
-                self.model = models._regression_model()
+                self.model = models._load_model('regression')
         elif model_type =="base":
-                self.model = models._base_model()
+                self.model = models._load_model('base')
         else:
             raise ValueError
 
@@ -43,7 +43,7 @@ class TrainClass:
         Train our model with the chosen parameter and on the trainning dataset with the validation dataset
     """
     def _train(self):
-        loader = Dataset_Loader('data/Wines.csv')
+        loader = Dataset_Loader('app/data/Wines.csv')
         train_data, train_label=loader._get_train_data()
         val_data, val_label=loader._get_val_data()
         if self.model_type == 'base':
@@ -61,15 +61,15 @@ class TrainClass:
             pickle.dump(self.model, open(filename, 'wb'))
         
 
-#Test du code
-if __name__ == '__main__':
-    t=TrainClass('base')
-    t._train()
-    t._save()
+# Test du code
+# if __name__ == '__main__':
+    # t=TrainClass('base')
+    # t._train()
+    # t._save()
 
-    loader = Dataset_Loader('data/Wines.csv')
-    X_test, Y_test = loader._get_test_data()
-    predictions=t.model.predict(X_test)
-    for i in range(0,len(predictions)):
-        print("predict : ",predictions[i], "resultat attendu : ", Y_test[i])
+    # loader = Dataset_Loader('app/data/Wines.csv')
+    # X_test, Y_test = loader._get_test_data()
+    # predictions=t.model.predict(X_test)
+    # for i in range(0,len(predictions)):
+    #     print("predict : ",predictions[i], "resultat attendu : ", Y_test[i])
 

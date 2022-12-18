@@ -1,6 +1,6 @@
 # projetWine
 
-Auteurs : Carmes Aurélien, Richeme Florian
+Auteurs : Carmes Aurélien (ICC), Richeme Florian (IA)
 
 
 ## Installation de l'application

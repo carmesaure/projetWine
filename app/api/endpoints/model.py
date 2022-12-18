@@ -12,6 +12,11 @@ router = APIRouter()
 
 @router.get("/")
 async def get_model():
+    """Returns the model serialization as json
+
+    Returns:
+        Dict[str, Dict]: Nested objects representing layers and parameters
+    """
     model_json = main.wineModel.model.to_json()
     return json.loads(model_json)
 
@@ -19,6 +24,11 @@ async def get_model():
     
 @router.get("/description")
 async def get_model_infos():
+    """Returns basic informations about the model
+
+    Returns:
+        Dict[str, str]: Layers description, loss, optimizer and metric
+    """
     return {"model description" : {
         "layers" : [
         "Dense layers of 11 units with the LeakyReLU activation",
@@ -34,6 +44,17 @@ async def get_model_infos():
     
 @router.put("/")
 async def add_wine(wine: InputWine):
+    """Add a line to the database containing some wine's description
+
+    Args:
+        wine (InputWine): Informations about the wine
+
+    Raises:
+        HTTPException: If the server is unable to open the data file
+
+    Returns:
+        Dict[str, str]: Message confirming that the data has been added to the file
+    """
     try:
         with open("app/data/Wines.csv", "a") as file:
             file_writer = writer(file)
@@ -48,6 +69,11 @@ async def add_wine(wine: InputWine):
 
 @router.post("/retrain")
 async def retrain_model():
+    """Retrains the model using the data saved on disk
+
+    Returns:
+        Dict[str, str]: Message confirming that the retrain was successfull
+    """
     main.wineModel._train()
     main.wineModel._save()
     return {'message' : "Model successfully retrained and saved"}

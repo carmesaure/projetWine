@@ -4,6 +4,7 @@ from pydantic import BaseModel, Field
 positive = Field(ge=0, description="Must be a positive value")
     
 class InputWine(BaseModel):
+    """Represents input data for a wine that can be added to the data file"""
     fixed_acidity : float = positive
     volatile_acidity : float = positive
     citric_acid : float = positive
@@ -19,6 +20,7 @@ class InputWine(BaseModel):
 
     
 class InputWinePredict(BaseModel):
+    """Represents input data for a wine given to the model to make a prediction about its quality"""
     fixed_acidity : float = positive
     volatile_acidity : float = positive
     citric_acid : float = positive

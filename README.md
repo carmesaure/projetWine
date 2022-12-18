@@ -1,13 +1,5 @@
 # projetWine
 
-TODO
-normaliser donnee entrantes
-
-
-
-
-
-
 
 ## Installation de l'application
 

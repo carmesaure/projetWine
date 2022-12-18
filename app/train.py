@@ -4,8 +4,8 @@ import unittest
 
 sys.path.append("./")
 
-from dataset import Dataset_Loader
-import model_.models as models
+from app.dataset import Dataset_Loader
+import app.model_.models as models
 import pickle
 
 
@@ -33,9 +33,9 @@ class TrainClass:
         self.batch_size=batch_size
         self.epochs=epochs
         if model_type == "regression":
-                self.model = models._regression_model()
+                self.model = models._load_model('regression')
         elif model_type =="base":
-                self.model = models._base_model()
+                self.model = models._load_model('base')
         else:
             raise ValueError
 
@@ -43,7 +43,7 @@ class TrainClass:
         Train our model with the chosen parameter and on the trainning dataset with the validation dataset
     """
     def _train(self):
-        loader = Dataset_Loader('data/Wines.csv')
+        loader = Dataset_Loader('app/data/Wines.csv')
         train_data, train_label=loader._get_train_data()
         val_data, val_label=loader._get_val_data()
         if self.model_type == 'base':
@@ -77,13 +77,13 @@ class TrainClass:
         return res
 
 #Test du code
-if __name__ == '__main__':
-    t=TrainClass('regression')
-    t._train()
-    t._save()
-    print(t._description())
+# if __name__ == '__main__':
+#     t=TrainClass('regression')
+#     t._train()
+#     t._save()
+#     print(t._description())
 
-    bestwine=[10.5,0.3,0.5,2.78,0.071,9.0,16.0,0.994,3.15,0.75,14]
+#     bestwine=[10.5,0.3,0.5,2.78,0.071,9.0,16.0,0.994,3.15,0.75,14]
 
 
 #    loader = Dataset_Loader('data/Wines.csv')
